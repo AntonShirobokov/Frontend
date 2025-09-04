@@ -2,8 +2,12 @@ import "./Login.css"
 import { useState } from "react"
 import axios from "axios"
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../AuthContext/AuthContext";
+import { jwtDecode } from 'jwt-decode';
 
 function Login() {
+
+    const { login } = useAuth();
 
     const navigate = useNavigate();
 
@@ -23,9 +27,13 @@ function Login() {
         try {
             const response = await axios.post("http://localhost:8080/api/login", formData);
             console.log("Успех:", response.data);
-            localStorage.setItem("accessToken", response.data.accessToken)
+            console.log("Успех:", jwtDecode(response.data.accessToken));
 
-            localStorage.setItem("refreshToken", response.data.refreshToken)
+            login({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken }, jwtDecode(response.data.accessToken))
+
+            // localStorage.setItem("accessToken", response.data.accessToken)
+
+            // localStorage.setItem("refreshToken", response.data.refreshToken)
             setErrorMessage("")
             navigate("/")
         } catch (error) {
