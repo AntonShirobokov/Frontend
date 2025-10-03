@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
             setAuth({
                 accessToken: access,
                 refreshToken: refresh,
-                user: user
+                user: JSON.parse(user)
             });
         }
         setLoading(false);

@@ -25,6 +25,7 @@ function Header() {
                 <nav className="header__nav">
                     <ul className="header__menu">
                         <li><a href="/">Главная</a></li>
+                        <li><a href="/create">Создать qr код</a></li>
                     </ul>
                 </nav>
             </div>

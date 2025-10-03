@@ -4,19 +4,26 @@ import axios from "axios"
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../AuthContext/AuthContext";
 import { jwtDecode } from 'jwt-decode';
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 function Login() {
 
     const { login } = useAuth();
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [errorMessage, setErrorMessage] = useState("");
 
     const [formData, setFormData] = useState({
         email: "",
-        passwordHash: "",
+        password: "",
     });
+
+    const from = location.state?.from || "/";
+    const message = location.state?.message || "";
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,24 +32,18 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8080/api/login", formData);
+            console.log("Отправка данных на вход:", formData);
+            const response = await axios.post("http://localhost:8080/auth/api/login", formData);
             console.log("Успех:", response.data);
-            console.log("Успех:", jwtDecode(response.data.accessToken));
+            console.log("Данные:", jwtDecode(response.data.accessToken));
+            console.log(from);
+            console.log(message);
 
             login({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken }, jwtDecode(response.data.accessToken))
-
-            // localStorage.setItem("accessToken", response.data.accessToken)
-
-            // localStorage.setItem("refreshToken", response.data.refreshToken)
             setErrorMessage("")
-            navigate("/")
+            navigate(from, { replace: true }); // вернем пользователя обратно
         } catch (error) {
-            setErrorMessage(error.response.data.message)
-            if (error.response) {
-                console.error("Ошибка от сервера:", error.response.data);
-            } else {
-                console.error("Ошибка сети:", error.message);
-            }
+            setErrorMessage(error.response?.data?.message || "Ошибка сети");
         }
     };
 
@@ -50,6 +51,8 @@ function Login() {
         <div className="register-container">
             <form className="register-form" onSubmit={handleSubmit}>
                 <h2>Вход</h2>
+
+                {message && <div className="info-text">{message}</div>}
 
                 <label htmlFor="email">Электронная почта</label>
                 <input
@@ -66,8 +69,8 @@ function Login() {
                 <input
                     type="password"
                     id="password"
-                    name="passwordHash"
-                    value={formData.passwordHash}
+                    name="password"
+                    value={formData.password}
                     onChange={handleChange}
                     placeholder="Введите пароль"
                     required

@@ -3,6 +3,8 @@
     justify-content: center;
     align-items: center;
     padding: 50px 20px;
+    background: #f7f9fc;
+    min-height: 100vh;
 }
 
 .register-form {
@@ -15,18 +17,21 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    font-family: sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 .register-form h2 {
     text-align: center;
     color: #000000;
     margin-bottom: 10px;
+    font-size: 1.6rem;
 }
 
 .register-form label {
     font-weight: 500;
     margin-bottom: 5px;
+    font-size: 0.95rem;
+    color: #333;
 }
 
 .register-form input {
@@ -34,27 +39,47 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1rem;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .register-form input:focus {
     outline: none;
-    border-color: #000000;
-    box-shadow: 0 0 4px rgba(8, 6, 39, 0.3);
+    border-color: #6c5ce7;
+    box-shadow: 0 0 4px rgba(108, 92, 231, 0.3);
 }
 
+.register-form input.error-input {
+    border-color: #e74c3c;
+    background-color: #fff5f5;
+}
+
+.error {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    margin-left: 2px;
+}
+
+/* кнопка */
 .register-form button {
-    padding: 10px 14px;
+    padding: 12px 14px;
     border: none;
     border-radius: 8px;
     background-color: #000000;
     color: #ffffff;
     font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
 }
 
 .register-form button:hover {
     background-color: #6c5ce7;
     transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
+}
+
+.register-form button:active {
+    transform: translateY(0);
+    box-shadow: none;
 }

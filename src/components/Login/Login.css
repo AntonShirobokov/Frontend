@@ -63,3 +63,13 @@
     font-size: 1rem;
     color: red;
 }
+
+.info-text {
+    background-color: #e6f4ff;
+    color: #0056b3;
+    border: 1px solid #99caff;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    text-align: center;
+}

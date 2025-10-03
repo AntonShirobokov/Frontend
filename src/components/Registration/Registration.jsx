@@ -1,7 +1,11 @@
 import { useState } from "react";
 import "./Registration.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Registration() {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -10,14 +14,46 @@ function Registration() {
         password: "",
     });
 
+    const [errors, setErrors] = useState({});
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        setErrors({ ...errors, [e.target.name]: "" });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
         console.log("Данные регистрации:", formData);
+
+        try {
+            await axios.post("http://localhost:8080/auth/api/registration", formData);
+            console.log("Успешная регистрация");
+            navigate("/");
+        } catch (error) {
+            console.error("Ошибка:", error.response?.data);
+
+            if (error.response) {
+                // 400 Bad Request (валидация полей)
+                if (error.response.status === 400) {
+                    const backendErrors = error.response.data.errors || {};
+                    const mappedErrors = {};
+
+                    for (const key in backendErrors) {
+                        if (key === "passwordHash") {
+                            mappedErrors["password"] = backendErrors[key];
+                        } else {
+                            mappedErrors[key] = backendErrors[key];
+                        }
+                    }
+                    setErrors(mappedErrors);
+                }
+
+                // 409 Conflict (уже существует email)
+                if (error.response.status === 409) {
+                    setErrors({ email: error.response.data.message });
+                }
+            }
+        }
     };
 
     return (
@@ -34,7 +70,9 @@ function Registration() {
                     onChange={handleChange}
                     placeholder="Введите имя"
                     required
+                    className={errors.firstName ? "error-input" : ""}
                 />
+                {errors.firstName && <span className="error">{errors.firstName}</span>}
 
                 <label htmlFor="lastName">Фамилия</label>
                 <input
@@ -45,7 +83,9 @@ function Registration() {
                     onChange={handleChange}
                     placeholder="Введите фамилию"
                     required
+                    className={errors.lastName ? "error-input" : ""}
                 />
+                {errors.lastName && <span className="error">{errors.lastName}</span>}
 
                 <label htmlFor="middleName">Отчество</label>
                 <input
@@ -55,7 +95,11 @@ function Registration() {
                     value={formData.middleName}
                     onChange={handleChange}
                     placeholder="Введите отчество"
+                    className={errors.middleName ? "error-input" : ""}
                 />
+                {errors.middleName && (
+                    <span className="error">{errors.middleName}</span>
+                )}
 
                 <label htmlFor="email">Электронная почта</label>
                 <input
@@ -66,7 +110,9 @@ function Registration() {
                     onChange={handleChange}
                     placeholder="Введите email"
                     required
+                    className={errors.email ? "error-input" : ""}
                 />
+                {errors.email && <span className="error">{errors.email}</span>}
 
                 <label htmlFor="password">Пароль</label>
                 <input
@@ -77,7 +123,9 @@ function Registration() {
                     onChange={handleChange}
                     placeholder="Введите пароль"
                     required
+                    className={errors.password ? "error-input" : ""}
                 />
+                {errors.password && <span className="error">{errors.password}</span>}
 
                 <button type="submit">Зарегистрироваться</button>
             </form>
