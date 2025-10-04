@@ -31,3 +31,179 @@
     color: #000000;
 
 }
+
+/* === Улучшенный общий вид формы === */
+.create-qr-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 24px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* === Поля ввода === */
+.create-qr-form select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    background-color: #fafafa;
+}
+
+
+
+.create-qr-form input {
+    width: 95%;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    background-color: #fafafa;
+}
+
+.create-qr-form input:focus,
+.create-qr-form select:focus {
+    outline: none;
+    border-color: #333;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+}
+
+/* === Кнопки === */
+.create-qr-form button {
+    padding: 10px 18px;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.create-qr-form button[type="button"] {
+    background-color: #e6e6e6;
+    color: #000;
+}
+
+.create-qr-form button[type="submit"] {
+    background-color: #333;
+    color: #fff;
+}
+
+.create-qr-form button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.create-qr-form button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* === Блок для списка === */
+.list-input {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.items-list {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.items-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+}
+
+.items-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.items-list li button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    color: #999;
+    transition: color 0.2s ease;
+}
+
+.items-list li button:hover {
+    color: #d00;
+}
+
+/* === QR-код блок === */
+.qr-code-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    background-color: #fafafa;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* === Ошибки === */
+.error-message {
+    color: #d33;
+    background-color: #ffe6e6;
+    border: 1px solid #f3b3b3;
+    padding: 10px;
+    border-radius: 8px;
+    width: 96.5%;
+    text-align: center;
+}
+
+/* === Кнопки действий внизу === */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+}
+
+/* === Кнопка удаления элемента === */
+.remove-btn {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.remove-btn:hover {
+    background-color: #ffe6e6;
+    border-color: #ffb3b3;
+    transform: scale(1.05);
+}
+
+.remove-icon {
+    color: #d33;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1;
+}

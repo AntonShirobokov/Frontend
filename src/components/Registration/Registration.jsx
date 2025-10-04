@@ -128,6 +128,7 @@ function Registration() {
                 {errors.password && <span className="error">{errors.password}</span>}
 
                 <button type="submit">Зарегистрироваться</button>
+                <button type="button" onClick={() => { navigate("/login") }}>Войти</button>
             </form>
         </div>
     );

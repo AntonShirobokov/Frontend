@@ -79,6 +79,7 @@ function Login() {
                 {errorMessage && <span className="error-text">{errorMessage}</span>}
 
                 <button type="submit">Войти</button>
+                <button type="button" onClick={() => { navigate("/registration") }}>Зарегестрироваться</button>
             </form>
         </div>
     );

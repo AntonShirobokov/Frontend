@@ -2,29 +2,35 @@ import "./CreateQrPage.css";
 import { QRCodeSVG } from "qrcode.react";
 import { useState, useRef } from "react";
 import { useAuth } from "../AuthContext/AuthContext";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, data } from "react-router-dom";
 import { v4 } from "uuid";
 import axios from "axios";
 
 function CreateQrPage() {
     const [typeQr, setTypeQr] = useState("simpleQr");
     const [link, setLink] = useState("");
-    const [items, setItems] = useState([]);
-    const [currentItem, setCurrentItem] = useState("");
+    const [items, setItems] = useState([]); // теперь храним [{ itemName, quantity }]
+    const [currentItemName, setCurrentItemName] = useState("");
+    const [currentQuantity, setCurrentQuantity] = useState(1);
     const [qrValue, setQrValue] = useState("");
     const [qrCodeId, setQrCodeId] = useState(null);
     const [error, setError] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
 
-    const { user, loading } = useAuth();
+    const { accessToken, refreshToken, user, loading } = useAuth();
     const qrRef = useRef();
 
     const addItem = () => {
-        const v = currentItem.trim();
-        if (!v) return;
-        setItems((prev) => [...prev, v]);
-        setCurrentItem("");
+        const name = currentItemName.trim();
+        const qty = Number(currentQuantity);
+        if (!name) return;
+        if (qty <= 0) return setError("Количество должно быть больше нуля");
+
+        setItems((prev) => [...prev, { itemName: name, quantity: qty }]);
+        setCurrentItemName("");
+        setCurrentQuantity(1);
+        setError("");
     };
 
     const removeItem = (index) => {
@@ -88,28 +94,49 @@ function CreateQrPage() {
             return;
         }
 
-        try {
-            const id = qrCodeId ?? v4();
-            const dataToSend = {
-                qrCodeId: id,
-                userId: user?.sub ?? null,
-                type: typeQr,
-                targetUrl: typeQr !== "qrList" ? link : null,
-                list: typeQr === "qrList" ? items : null,
-                qrUrl:
-                    typeQr === "simpleQr" ? link : `http://localhost:8083/qrcode/${id}`
-            };
 
-            setQrCodeId(id);
-            setQrValue(dataToSend.qrUrl);
+        const id = qrCodeId ?? v4();
+        const dataToSend = {
+            qrCodeId: id,
+            userId: user?.sub ?? null,
+            type: typeQr,
+            targetUrl: typeQr !== "qrList" ? link : `http://localhost:8082/qrcode/${id}`,
+            content: typeQr === "qrList" ? items : null,
+            qrUrl:
+                typeQr === "simpleQr" ? link : `http://localhost:8083/qrcode/${id}`
+        };
 
-            await axios.post("http://localhost:8080/management/api/saveQr", dataToSend);
+        setQrCodeId(id);
+        setQrValue(dataToSend.qrUrl);
 
-            setError("");
-        } catch (err) {
-            console.error("Ошибка при сохранении QR-кода:", err);
-            setError("Ошибка при сохранении QR-кода. Попробуйте ещё раз.");
-        }
+        await axios.post("http://localhost:8080/management/api/saveQr", dataToSend,
+            {
+                headers: {
+                    "Authorization": "Bearer " + accessToken
+                }
+            }
+        )
+            .then(response => {
+                setError("");
+                alert("Qrcode сохранен")
+            })
+            .catch(error => {
+                console.log("лог1", error.response.status);
+                console.log("лог1", error.response.data.message);
+                switch (error.response.status) {
+                    case 409:
+                        console.log("лог2", error.response.data);
+                        console.log("лог3", error);
+                        setError("Вы уже сохранили этот QR код");
+                        break;
+                    case 401:
+
+                        break;
+                    default:
+                        setError("Ошибка сервера, попробуйте позже");
+                }
+            })
+
     }
 
     return (
@@ -126,7 +153,8 @@ function CreateQrPage() {
                         setTypeQr(newType);
                         setLink("");
                         setItems([]);
-                        setCurrentItem("");
+                        setCurrentItemName("");
+                        setCurrentQuantity(1);
                         setQrValue("");
                         setQrCodeId(null);
                         setError("");
@@ -153,14 +181,16 @@ function CreateQrPage() {
                         <label>Введите элементы списка</label>
                         <div className="list-input">
                             <input
-                                value={currentItem}
-                                onChange={(e) => setCurrentItem(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        e.preventDefault();
-                                        addItem();
-                                    }
-                                }}
+                                placeholder="Название предмета"
+                                value={currentItemName}
+                                onChange={(e) => setCurrentItemName(e.target.value)}
+                            />
+                            <input
+                                type="number"
+                                min="1"
+                                placeholder="Количество"
+                                value={currentQuantity}
+                                onChange={(e) => setCurrentQuantity(e.target.value)}
                             />
                             <button type="button" onClick={addItem}>
                                 Добавить
@@ -170,9 +200,11 @@ function CreateQrPage() {
                         <ul className="items-list">
                             {items.map((item, i) => (
                                 <li key={i}>
-                                    <span>{item}</span>
-                                    <button type="button" onClick={() => removeItem(i)}>
-                                        ❌
+                                    <span>
+                                        {item.itemName} — {item.quantity} шт.
+                                    </span>
+                                    <button type="button" className="remove-btn" onClick={() => removeItem(i)}>
+                                        <span className="remove-icon">−</span>
                                     </button>
                                 </li>
                             ))}
