@@ -41,7 +41,7 @@ function Login() {
 
             login({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken }, jwtDecode(response.data.accessToken))
             setErrorMessage("")
-            navigate(from, { replace: true }); // вернем пользователя обратно
+            navigate(from, { replace: true });
         } catch (error) {
             setErrorMessage(error.response?.data?.message || "Ошибка сети");
         }

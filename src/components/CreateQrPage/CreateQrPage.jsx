@@ -5,16 +5,19 @@ import { useAuth } from "../AuthContext/AuthContext";
 import { useNavigate, useLocation, data } from "react-router-dom";
 import { v4 } from "uuid";
 import axios from "axios";
+import apiManagementPrivate from "../../api/apiManagementPrivate";
 
 function CreateQrPage() {
     const [typeQr, setTypeQr] = useState("simpleQr");
     const [link, setLink] = useState("");
-    const [items, setItems] = useState([]); // теперь храним [{ itemName, quantity }]
+    const [items, setItems] = useState([]);
     const [currentItemName, setCurrentItemName] = useState("");
     const [currentQuantity, setCurrentQuantity] = useState(1);
     const [qrValue, setQrValue] = useState("");
     const [qrCodeId, setQrCodeId] = useState(null);
+    const [qrTitle, setQrTitle] = useState("");
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -38,6 +41,7 @@ function CreateQrPage() {
     };
 
     function generateHandler() {
+        setSuccess("");
         if ((typeQr === "qrWithStatistics" || typeQr === "qrList") && !user) {
             navigate("/login", {
                 state: {
@@ -70,7 +74,7 @@ function CreateQrPage() {
 
     async function submitHandler(e) {
         e.preventDefault();
-
+        setSuccess("")
         if (!user) {
             navigate("/login", {
                 state: {
@@ -93,11 +97,16 @@ function CreateQrPage() {
             setError("Список должен содержать хотя бы один элемент");
             return;
         }
+        if (!qrTitle.trim()) {
+            setError("Введите название QR-кода");
+            return;
+        }
 
 
         const id = qrCodeId ?? v4();
         const dataToSend = {
             qrCodeId: id,
+            title: qrTitle,
             userId: user?.sub ?? null,
             type: typeQr,
             targetUrl: typeQr !== "qrList" ? link : `http://localhost:8082/qrcode/${id}`,
@@ -109,40 +118,37 @@ function CreateQrPage() {
         setQrCodeId(id);
         setQrValue(dataToSend.qrUrl);
 
-        await axios.post("http://localhost:8080/management/api/saveQr", dataToSend,
-            {
-                headers: {
-                    "Authorization": "Bearer " + accessToken
-                }
+        try {
+            const response = await apiManagementPrivate.post("/management/api/saveQr", dataToSend);
+            setError("");
+            setSuccess("QR-код сохранен");
+        } catch (error) {
+            console.log("Код ошибки", error.response?.status);
+            switch (error.response?.status) {
+                case 409:
+                    setError("Вы уже сохранили этот QR-код");
+                    break;
+                case 401:
+                    break;
+                default:
+                    setError("Ошибка сервера, попробуйте позже");
             }
-        )
-            .then(response => {
-                setError("");
-                alert("Qrcode сохранен")
-            })
-            .catch(error => {
-                console.log("лог1", error.response.status);
-                console.log("лог1", error.response.data.message);
-                switch (error.response.status) {
-                    case 409:
-                        console.log("лог2", error.response.data);
-                        console.log("лог3", error);
-                        setError("Вы уже сохранили этот QR код");
-                        break;
-                    case 401:
-
-                        break;
-                    default:
-                        setError("Ошибка сервера, попробуйте позже");
-                }
-            })
-
+        }
     }
 
     return (
         <main className="main">
             <form className="create-qr-form" onSubmit={submitHandler}>
                 <h2>Выберите тип Qr кода и сгенерируйте его</h2>
+
+
+                <label htmlFor="qrtitle">Название QR-кода</label>
+                <input
+                    id="qrtitle"
+                    value={qrTitle}
+                    onChange={(e) => setQrTitle(e.target.value)}
+                    placeholder="Введите название QR-кода"
+                />
 
                 <label htmlFor="qrtype">Тип Qr кода</label>
                 <select
@@ -219,7 +225,7 @@ function CreateQrPage() {
                 )}
 
                 {error && <p className="error-message">{error}</p>}
-
+                {success && <p className="success-message">{success}</p>}
                 <div className="actions">
                     <button type="button" onClick={generateHandler}>
                         Сгенерировать

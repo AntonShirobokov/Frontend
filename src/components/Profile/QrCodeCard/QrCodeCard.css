@@ -1,0 +1,23 @@
+.qrCode {
+    display: block;
+    justify-self: center;
+}
+
+.qr-name {
+    text-align: center;
+}
+
+
+.button-info {
+    display: block;
+    justify-self: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+.popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

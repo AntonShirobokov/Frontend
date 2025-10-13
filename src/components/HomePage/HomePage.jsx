@@ -1,7 +1,9 @@
 import "./HomePage.css"
-
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+    const navigate = useNavigate();
+
     return (
         <>
             <main className="main">
@@ -10,7 +12,7 @@ function HomePage() {
                     <p className="tagline">
                         Персональные QR-коды для ваших вещей, событий и идей
                     </p>
-                    <button className="cta">Создать QR-код</button>
+                    <button className="cta" onClick={() => navigate("/create")}>Создать QR-код</button>
                 </section>
 
                 <section className="features">

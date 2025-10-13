@@ -33,7 +33,6 @@ function Registration() {
             console.error("Ошибка:", error.response?.data);
 
             if (error.response) {
-                // 400 Bad Request (валидация полей)
                 if (error.response.status === 400) {
                     const backendErrors = error.response.data.errors || {};
                     const mappedErrors = {};
@@ -48,7 +47,6 @@ function Registration() {
                     setErrors(mappedErrors);
                 }
 
-                // 409 Conflict (уже существует email)
                 if (error.response.status === 409) {
                     setErrors({ email: error.response.data.message });
                 }

@@ -26,7 +26,7 @@ function App() {
 
         {/* Приватные страницы (только для авторизованных) */}
         <Route element={<PrivateRoute />}>
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<div><Header /> <Profile /></div>} />
         </Route>
       </Routes>
     </Router>

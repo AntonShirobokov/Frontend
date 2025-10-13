@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from 'jwt-decode';
+import axios from "axios";
 
 export const AuthContext = createContext(null);
 
@@ -42,16 +43,29 @@ export function AuthProvider({ children }) {
     };
 
 
-    const logout = () => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("user");
+    const logout = async () => {
+        try {
+            console.log("Refresh токен ", auth.refreshToken)
+            if (auth.refreshToken) {
+                console.log("Выполняем запрос на logout")
+                await axios.post(
+                    "http://localhost:8080/auth/api/logout",
+                    { refreshToken: auth.refreshToken },
+                );
+            }
+        } catch (error) {
+            console.error("Ошибка при логауте на сервере:", error);
+        } finally {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("user");
 
-        setAuth({
-            accessToken: null,
-            refreshToken: null,
-            user: null
-        });
+            setAuth({
+                accessToken: null,
+                refreshToken: null,
+                user: null
+            });
+        }
     };
 
     return (
