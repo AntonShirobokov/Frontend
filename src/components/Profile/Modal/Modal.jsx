@@ -1,7 +1,8 @@
 import "./Modal.css"
 import { QRCodeSVG } from "qrcode.react"
 
-function ModalQrWithStatistics({ qrCodeInfo, onClose }) {
+
+function ModalQrWithStatistics({ qrCodeInfo, onClose, onDelete }) {
     return <>
         <div className="modal-backdrop">
 
@@ -11,6 +12,7 @@ function ModalQrWithStatistics({ qrCodeInfo, onClose }) {
                     <div><p>Тип: qr код для отслеживания статистики</p></div>
                 </div>
                 <button className="button-close" onClick={() => onClose()}>Закрыть</button>
+                <button className="button-delete" onClick={() => onDelete(qrCodeInfo.qrCodeId)}>Удалить</button>
             </div>
 
         </div>
@@ -18,7 +20,7 @@ function ModalQrWithStatistics({ qrCodeInfo, onClose }) {
 }
 
 
-function ModalQrList({ qrCodeInfo, onClose }) {
+function ModalQrList({ qrCodeInfo, onClose, onDelete }) {
     return <>
         <div className="modal-backdrop">
 
@@ -29,13 +31,14 @@ function ModalQrList({ qrCodeInfo, onClose }) {
                     <div><p>Здесь будет список содержимого</p></div>
                 </div>
                 <button className="button-close" onClick={() => onClose()}>Закрыть</button>
+                <button className="button-delete" onClick={() => onDelete(qrCodeInfo.qrCodeId)}>Удалить</button>
             </div>
 
         </div>
     </>
 }
 
-function ModalSimpleQr({ qrCodeInfo, onClose }) {
+function ModalSimpleQr({ qrCodeInfo, onClose, onDelete }) {
 
     return <>
         <div className="modal-backdrop">
@@ -49,14 +52,14 @@ function ModalSimpleQr({ qrCodeInfo, onClose }) {
                     <QRCodeSVG value={qrCodeInfo.qrUrl}></QRCodeSVG>
                 </div>
                 <button className="button-close" onClick={() => onClose()}>Закрыть</button>
-                <button className="button-close" onClick={() => onClose()}>Удалить</button>
+                <button className="button-delete" onClick={() => onDelete(qrCodeInfo.qrCodeId)}>Удалить</button>
             </div>
 
         </div>
     </>
 }
 
-function Modal({ qrCodeInfo, onClose }) {
+function Modal({ qrCodeInfo, onClose, onDelete }) {
 
     const formattedDate = new Date(qrCodeInfo.createdAt).toLocaleString("ru-RU", {
         day: "2-digit",
@@ -69,9 +72,9 @@ function Modal({ qrCodeInfo, onClose }) {
     const infoWithFormattedDate = { ...qrCodeInfo, createdAt: formattedDate };
 
     switch (qrCodeInfo.type) {
-        case "qrWithStatistics": return <ModalQrWithStatistics qrCodeInfo={infoWithFormattedDate} onClose={onClose} />;
-        case "qrList": return <ModalQrList qrCodeInfo={infoWithFormattedDate} onClose={onClose} />;
-        default: return <ModalSimpleQr qrCodeInfo={infoWithFormattedDate} onClose={onClose} />;
+        case "qrWithStatistics": return <ModalQrWithStatistics qrCodeInfo={infoWithFormattedDate} onClose={onClose} onDelete={onDelete} />;
+        case "qrList": return <ModalQrList qrCodeInfo={infoWithFormattedDate} onClose={onClose} onDelete={onDelete} />;
+        default: return <ModalSimpleQr qrCodeInfo={infoWithFormattedDate} onClose={onClose} onDelete={onDelete} />;
     }
 }
 

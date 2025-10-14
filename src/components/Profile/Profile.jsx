@@ -13,6 +13,20 @@ function Profile() {
     const [qrList, setQrList] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
+    async function onDelete(qrCodeId) {
+        await apiManagementPrivate.delete("/management/api/deleteQrCode", {
+            data: { qrCodeId: qrCodeId }
+        }).then(
+            response => {
+                console.log(`Qr код ${qrCodeId} был удален`, response.status);
+                setQrList(qrList.filter(qrCode => qrCode.qrCodeId != qrCodeId));
+            }
+        ).catch(error => {
+            console.log("Ошибка при удалении qr кода: ", error.response.status);
+        }
+        )
+    }
+
 
     useEffect(() => {
         async function fetchData() {
@@ -42,7 +56,7 @@ function Profile() {
 
                     {isLoading ? null : qrList.length == 0 ? <p>Вы не сохранили ни один qr код</p> :
                         <div className="conteiner"> {qrList.map((item, index) => {
-                            return <div className="conteinerItem" key={index}><QrCodeCard qrCodeInfo={item} /></div>
+                            return <div className="conteinerItem" key={item.qrCodeId}><QrCodeCard qrCodeInfo={item} onDelete={onDelete} /></div>
                         })}</div>
                     }
                 </div>

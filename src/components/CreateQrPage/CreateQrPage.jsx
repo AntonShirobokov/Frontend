@@ -146,7 +146,10 @@ function CreateQrPage() {
                 <input
                     id="qrtitle"
                     value={qrTitle}
-                    onChange={(e) => setQrTitle(e.target.value)}
+                    onChange={(e) => {
+                        setQrTitle(e.target.value)
+                        setSuccess("")
+                    }}
                     placeholder="Введите название QR-кода"
                 />
 
@@ -164,6 +167,7 @@ function CreateQrPage() {
                         setQrValue("");
                         setQrCodeId(null);
                         setError("");
+                        setSuccess("");
                     }}
                 >
                     <option value="simpleQr">Простой Qr код</option>
