@@ -7,9 +7,7 @@ import "./Profile.css"
 import QrCodeCard from "./QrCodeCard/QrCodeCard";
 
 function Profile() {
-    const { accessToken, refreshToken, user } = useAuth();
-
-
+    const { user } = useAuth();
     const [qrList, setQrList] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
@@ -44,22 +42,26 @@ function Profile() {
 
     return (
         <div className="main">
-            <div>
+            <div className="user-info">
                 <h2>Профиль</h2>
-                <div>
-                    <p><strong>ФИО:</strong> {user.lastName + " " + user.firstName + " " + user.middleName}</p>
-                    <p><strong>Email:</strong> {user.email}</p>
-                    <p><strong>Роль:</strong> {user.roles.length == 1 ? "Пользователь" : "Модератор"}</p>
-                </div>
-                <div>
-                    <h2> Созданные qr коды </h2>
+                <p><strong>ФИО:</strong> {`${user.lastName} ${user.firstName} ${user.middleName}`}</p>
+                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>Роль:</strong> {user.roles.length === 1 ? "Пользователь" : "Модератор"}</p>
+            </div>
 
-                    {isLoading ? null : qrList.length == 0 ? <p>Вы не сохранили ни один qr код</p> :
-                        <div className="conteiner"> {qrList.map((item, index) => {
-                            return <div className="conteinerItem" key={item.qrCodeId}><QrCodeCard qrCodeInfo={item} onDelete={onDelete} /></div>
-                        })}</div>
-                    }
-                </div>
+            <div className="qr-section">
+                <h2>Сохраненные QR-коды</h2>
+                {isLoading ? null : (
+                    qrList.length === 0
+                        ? <p className="empty-message">Вы не сохранили ни один QR-код</p>
+                        : <div className="conteiner">
+                            {qrList.map(item => (
+                                <div className="conteinerItem" key={item.qrCodeId}>
+                                    <QrCodeCard qrCodeInfo={item} onDelete={onDelete} />
+                                </div>
+                            ))}
+                        </div>
+                )}
             </div>
         </div>
     );

@@ -1,23 +1,49 @@
 .qrCode {
     display: block;
-    justify-self: center;
+    margin: 0 auto;
+    width: 150px;
+    height: 150px;
 }
 
 .qr-name {
     text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #111;
+    word-break: break-word;
 }
-
 
 .button-info {
     display: block;
-    justify-self: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin: 15px auto 0 auto;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #e6e6e6;
+    color: #000;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
+.button-info:hover {
+    background-color: #d6d6d6;
+    transform: translateY(-2px);
+}
 
-.popup {
-    position: absolute;
-    top: 0;
-    left: 0;
+.conteinerItem>div {
+    background-color: #fafafa;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.conteinerItem>div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
