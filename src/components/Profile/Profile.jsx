@@ -11,9 +11,12 @@ function Profile() {
     const [qrList, setQrList] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
-    async function onDelete(qrCodeId) {
+    async function onDelete(qrCodeId, type) {
         await apiManagementPrivate.delete("/management/api/deleteQrCode", {
-            data: { qrCodeId: qrCodeId }
+            data: {
+                qrCodeId: qrCodeId,
+                type: type
+            }
         }).then(
             response => {
                 console.log(`Qr код ${qrCodeId} был удален`, response.status);
@@ -26,18 +29,22 @@ function Profile() {
     }
 
 
-    useEffect(() => {
-        async function fetchData() {
-            await apiManagementPrivate.get("/management/api/getAllQrCodes").then(response => {
+    async function fetchData() {
+        await apiManagementPrivate.get("/management/api/getAllQrCodes")
+            .then(response => {
                 console.log("Полученные данные", response.data);
                 setQrList(response.data);
                 setIsLoading(false);
-            }).catch(error => {
-                console.log("Ошибка при запросе с кодом ", error.response.status);
             })
-        };
+            .catch(error => {
+                console.log("Ошибка при запросе с кодом ", error.response.status);
+                setIsLoading(false);
+            });
+    }
+
+    useEffect(() => {
         fetchData();
-    }, [])
+    }, []);
 
 
     return (
@@ -57,7 +64,7 @@ function Profile() {
                         : <div className="conteiner">
                             {qrList.map(item => (
                                 <div className="conteinerItem" key={item.qrCodeId}>
-                                    <QrCodeCard qrCodeInfo={item} onDelete={onDelete} />
+                                    <QrCodeCard qrCodeInfo={item} onDelete={onDelete} onRefresh={fetchData} />
                                 </div>
                             ))}
                         </div>
