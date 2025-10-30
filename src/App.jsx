@@ -7,7 +7,7 @@ import Profile from "./components/Profile/Profile";
 import { PublicRoute } from "./components/routes/PublicRoute";
 import { PrivateRoute } from "./components/routes/PrivateRoute";
 import CreateQrPage from "./components/CreateQRPage/CreateQRPage";
-
+import QrCodePage from "./components/QrCodePage/QrCodePage";
 
 function App() {
   return (
@@ -16,6 +16,7 @@ function App() {
         {/* Главная страница — доступна всем */}
         <Route path="/" element={<div><Header /> <HomePage /></div>} />
         <Route path="/create" element={<div><Header /> <CreateQrPage /></div>} />
+        <Route path="/qrcodes/:id" element={<QrCodePage />} />
 
 
         {/* Публичные страницы (только для неавторизованных) */}

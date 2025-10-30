@@ -7,6 +7,7 @@ import { useState } from "react";
 import apiManagementPrivate from "../../../api/apiManagementPrivate";
 
 function ModalQrWithStatistics({ qrCodeInfo, onClose, onDelete, onRefresh }) {
+    const [isLoadingCount, setIsLoadingCount] = useState(true);
     const [countRedirect, setCountRedirect] = useState("загрузка");
     const [isEditing, setIsEditing] = useState(false);
     const [titleToEdit, setTitleToEdit] = useState("");
@@ -18,8 +19,11 @@ function ModalQrWithStatistics({ qrCodeInfo, onClose, onDelete, onRefresh }) {
             try {
                 const response = await apiAnalytics.get(`/api/${qrCodeInfo.qrCodeId}`);
                 setCountRedirect(response.data.countOfRedirect);
+                setIsLoadingCount(false);
             } catch (error) {
                 console.log("Ошибка при загрузке статистики", error);
+                setCountRedirect("ошибка загрузки данных");
+                setIsLoadingCount(false);
             }
         }
         fetchData();
