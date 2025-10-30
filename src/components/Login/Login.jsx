@@ -33,7 +33,7 @@ function Login() {
         e.preventDefault();
         try {
             console.log("Отправка данных на вход:", formData);
-            const response = await axios.post("http://localhost:8080/auth/api/login", formData);
+            const response = await axios.post(`${import.meta.env.VITE_API_GATEWAY_BASEURL}/auth/api/login`, formData);
             console.log("Успех:", response.data);
             console.log("Данные:", jwtDecode(response.data.accessToken));
             console.log(from);

@@ -26,7 +26,7 @@ function Registration() {
         console.log("Данные регистрации:", formData);
 
         try {
-            await axios.post("http://localhost:8080/auth/api/registration", formData);
+            await axios.post(`${import.meta.env.VITE_API_GATEWAY_BASEURL}/auth/api/registration`, formData);
             console.log("Успешная регистрация");
             navigate("/");
         } catch (error) {

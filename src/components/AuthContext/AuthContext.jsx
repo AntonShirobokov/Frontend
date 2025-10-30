@@ -49,7 +49,7 @@ export function AuthProvider({ children }) {
             if (auth.refreshToken) {
                 console.log("Выполняем запрос на logout")
                 await axios.post(
-                    "http://localhost:8080/auth/api/logout",
+                    `${import.meta.env.VITE_API_GATEWAY_BASEURL}/auth/api/logout`,
                     { refreshToken: auth.refreshToken },
                 );
             }

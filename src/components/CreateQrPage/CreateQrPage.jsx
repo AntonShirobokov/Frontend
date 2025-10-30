@@ -67,7 +67,7 @@ function CreateQrPage() {
         setQrCodeId(id);
 
         const url =
-            typeQr === "simpleQr" ? link : `http://localhost:8083/qrcode/${id}`;
+            typeQr === "simpleQr" ? link : `${import.meta.env.VITE_QR_REDIRECT_BASEURL}/qrcode/${id}`;
 
         setQrValue(url);
     }
@@ -109,10 +109,10 @@ function CreateQrPage() {
             title: qrTitle,
             userId: user?.sub ?? null,
             type: typeQr,
-            targetUrl: typeQr !== "qrList" ? link : `http://localhost:8082/qrcode/${id}`,
+            targetUrl: typeQr !== "qrList" ? link : `${import.meta.env.VITE_QR_MANAGEMENT_BASEURL}/qrcode/${id}`,
             content: typeQr === "qrList" ? items : null,
             qrUrl:
-                typeQr === "simpleQr" ? link : `http://localhost:8083/qrcode/${id}`
+                typeQr === "simpleQr" ? link : `${import.meta.env.VITE_QR_REDIRECT_BASEURL}/qrcode/${id}`
         };
 
         setQrCodeId(id);

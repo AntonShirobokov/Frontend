@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuth } from "../components/AuthContext/AuthContext";
 
 const apiManagementPrivate = axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: `${import.meta.env.VITE_API_GATEWAY_BASEURL}`,
 });
 
 apiManagementPrivate.interceptors.request.use(
@@ -28,7 +28,7 @@ apiManagementPrivate.interceptors.response.use(
                 const refreshToken = localStorage.getItem("refreshToken");
                 if (!refreshToken) throw new Error("No refresh token");
 
-                const response = await axios.post("http://localhost:8080/auth/api/refresh", {
+                const response = await axios.post(`${import.meta.env.VITE_API_GATEWAY_BASEURL}/auth/api/refresh`, {
                     refreshToken,
                 });
 

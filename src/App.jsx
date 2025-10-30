@@ -6,7 +6,7 @@ import Login from "./components/Login/Login";
 import Profile from "./components/Profile/Profile";
 import { PublicRoute } from "./components/routes/PublicRoute";
 import { PrivateRoute } from "./components/routes/PrivateRoute";
-import CreateQrPage from "./components/CreateQRPage/CreateQRPage";
+import CreateQrPage from "./components/CreateQrPage/CreateQrPage";
 import QrCodePage from "./components/QrCodePage/QrCodePage";
 
 function App() {

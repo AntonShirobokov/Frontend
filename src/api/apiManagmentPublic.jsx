@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiManagementPublic = axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: `${import.meta.env.VITE_API_GATEWAY_BASEURL}`,
 });
 
 export default apiManagementPublic;
