@@ -67,7 +67,7 @@ function CreateQrPage() {
         setQrCodeId(id);
 
         const url =
-            typeQr === "simpleQr" ? link : `${import.meta.env.VITE_QR_REDIRECT_BASEURL}/qrcode/${id}`;
+            typeQr === "simpleQr" ? link : `${import.meta.env.VITE_QR_REDIRECT_BASEURL}/redirect/${id}`;
 
         setQrValue(url);
     }
@@ -109,10 +109,10 @@ function CreateQrPage() {
             title: qrTitle,
             userId: user?.sub ?? null,
             type: typeQr,
-            targetUrl: typeQr !== "qrList" ? link : `${import.meta.env.VITE_QR_MANAGEMENT_BASEURL}/qrcode/${id}`,
+            targetUrl: typeQr !== "qrList" ? link : `${import.meta.env.VITE_QR_MANAGEMENT_BASEURL}/qrcodes/${id}`,
             content: typeQr === "qrList" ? items : null,
             qrUrl:
-                typeQr === "simpleQr" ? link : `${import.meta.env.VITE_QR_REDIRECT_BASEURL}/qrcode/${id}`
+                typeQr === "simpleQr" ? link : `${import.meta.env.VITE_QR_REDIRECT_BASEURL}/redirect/${id}`
         };
 
         setQrCodeId(id);

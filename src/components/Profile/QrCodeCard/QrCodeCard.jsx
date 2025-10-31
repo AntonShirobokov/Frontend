@@ -19,7 +19,7 @@ function QrCodeWithStatistics({ qrCodeInfo, onDelete, onRefresh }) {
     return <>
         {isModalOpen && <Modal qrCodeInfo={qrCodeInfo} onClose={onClose} onDelete={onDelete} onRefresh={onRefresh} />}
         <p className="qr-name">{qrCodeInfo.title}</p>
-        <QRCodeSVG value={qrCodeInfo.targetUrl} className="qrCode"></QRCodeSVG>
+        <QRCodeSVG value={qrCodeInfo.qrUrl} className="qrCode"></QRCodeSVG>
         <button className="button-info" onClick={getInformation}>Подробнее</button>
     </>
 }
@@ -39,7 +39,7 @@ function QrList({ qrCodeInfo, onDelete, onRefresh }) {
     return <>
         {isModalOpen && <Modal qrCodeInfo={qrCodeInfo} onClose={onClose} onDelete={onDelete} onRefresh={onRefresh} />}
         <p className="qr-name">{qrCodeInfo.title}</p>
-        <QRCodeSVG value={qrCodeInfo.targetUrl} className="qrCode"></QRCodeSVG>
+        <QRCodeSVG value={qrCodeInfo.qrUrl} className="qrCode"></QRCodeSVG>
         <button className="button-info" onClick={getInformation}>Подробнее</button>
     </>
 }
